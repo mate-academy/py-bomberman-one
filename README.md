@@ -26,12 +26,13 @@ If the player coordinate is out of bound, it should change it to field border.
 Use `pygame.sprite.spritecollideany` with the player and walls group 
 to check if the player is colliding with any sprite in that group. (If after 
 `self.rect.move_ip` player starts colliding - just move it back). [Collision detection](https://realpython.com/pygame-a-primer/#collision-detection)
-4. Player should plant Bomb when the user presses space button. Bomb is another
-Sprite. The bomb should be planted on a current player's coordinates. But the player
+4. Player should plant the bomb when the user presses the space button. 
+Implement class `Bomb` that should be a sprite. Bomb should be planted on the 
+current player's coordinates. But the player
 cannot walk over the bomb, think about how the player gets off the bomb after the
 planting.
 5. Player cannot put bomb if less than 1 second has passed from last planting 
-(that is all so far, the bomb will explode later). There are `60` frames per second.
+(the logic of the explosion you will implement later). There are `60` frames per second.
 You can store timeout in the attribute and reduce it in `update` method.
 6. Replace simple colored rectangles with images given in `"app/images/`. Use
 `pygame.image.load("source.png").convert_alpha()` instead of `Surface`. The player
