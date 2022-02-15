@@ -31,7 +31,7 @@ Sprite. Bomb should be planted on current player's coordinates. But player
 cannot walk over the bomb, think about how player get of the bomb after the
 planting.
 5. Player cannot put bomb if less than 1 second has passed from last planting 
-(that is all so far, bomb will explode later). There is `60` frames per second.
+(that is all so far, bomb will explode later). There are `60` frames per second.
 You can store timeout in the attribute and reduce it in `update` method.
 6. Replace simple colored rectangles with images given in `"app/images/`. Use
 `pygame.image.load("source.png").convert_alpha()` instead of `Surface`. Player
