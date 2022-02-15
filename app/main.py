@@ -35,8 +35,8 @@ class Player(pygame.sprite.Sprite):
 class Wall(pygame.sprite.Sprite):
     def __init__(self, center_pos: tuple):
         super().__init__()
-        self.width = 50
-        self.height = 50
+        self.width = DEFAULT_OBJECT_SIZE
+        self.height = DEFAULT_OBJECT_SIZE
         self.surf = pygame.Surface((self.width, self.height))
         self.surf.fill((255, 255, 255))
         self.rect = self.surf.get_rect(center=center_pos)
