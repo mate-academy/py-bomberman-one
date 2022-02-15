@@ -28,6 +28,9 @@ class Player(pygame.sprite.Sprite):
         self.surf.fill((0, 255, 0))
         self.rect = self.surf.get_rect()
 
+    def update(self):
+        pass
+
 
 class Wall(pygame.sprite.Sprite):
     def __init__(self, center_pos: tuple):

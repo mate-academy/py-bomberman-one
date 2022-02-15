@@ -4,19 +4,30 @@
 - [Pygame primer](https://realpython.com/pygame-a-primer/#sprite-groups)
 - [Pygame sprites and groups](https://kidscancode.org/blog/2016/08/pygame_1-2_working-with-sprites/)
 
+Games! Games is perfect example to show OOP principles at work.
+You could play game Bomberman in your youth or childhood, now
+you have to write your own a little modified version.
 You already have initial structure of game Bomberman.
 
-<img width="500" alt="Initial" src="https://user-images.githubusercontent.com/80070761/153867128-3e78f7d2-1231-46f2-8e8a-af35caa03e24.png">
+![Example](https://user-images.githubusercontent.com/80070761/153867128-3e78f7d2-1231-46f2-8e8a-af35caa03e24.png)
 
 There are `player` (green rectangle) and `walls` (white squares).
 You should implement these features:
 - Player must be able to move up, down, left, right when user
 presses arrows (overwrite method update).
 - Player cannot walk away from field and walk over the walls.
-- Player should deploy a bomb when user presses space key. Player cannot
-put bomb if less than 1 second has passed from last deploying (that is
+- Player should plant a bomb when user presses space key. Player cannot
+put bomb if less than 1 second has passed from last planting (that is
 all so far, bomb will explode later). Player cannot walk over the bomb also.
 - Replace simple colored rectangles with pictures given in `"app/images/`.
+
+
+All information you can find in guides links on the top of the tasks.
+
+These methods can be relevant: 
+- `rect.move_ip` 
+- `pygame.key.get_pressed` 
+- `pygame.sprite.spritecollideany`
 
 Also, it is bad idea to store full application logic in `main.py`. 
 - Implement your architecture ideas
