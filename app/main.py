@@ -1,11 +1,13 @@
 import pygame
 
 from pygame.locals import (
+    RLEACCEL,
     K_UP,
     K_DOWN,
     K_LEFT,
     K_RIGHT,
     K_ESCAPE,
+    K_SPACE,
     KEYDOWN,
     QUIT,
 )
@@ -24,12 +26,85 @@ screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
-        self.surf = pygame.Surface((20, 40))
-        self.surf.fill((0, 255, 0))
+        self.surf = pygame.image.load("./images/player_front.png").convert()
+        self.surf.set_colorkey((0, 255, 0), RLEACCEL)
         self.rect = self.surf.get_rect()
+        self.timer = 0
 
-    def update(self):
-        pass
+    def update(self, stepback=0):
+        self.timer += 1
+        if stepback != 0:
+            self.rect.move_ip(-stepback, 0)
+            if pygame.sprite.spritecollideany(player, walls):
+                self.rect.move_ip(stepback, 0)
+                self.rect.move_ip(0, stepback)
+
+        pressed_keys = pygame.key.get_pressed()
+        if pressed_keys[K_UP]:
+            self.rect.move_ip(0, -3)
+            self.surf = pygame.image.load("./images/player_back.png").convert()
+            if pygame.sprite.spritecollideany(player, walls):
+                self.rect.move_ip(0, 3)
+            # if pygame.sprite.spritecollideany(player, bombs):
+            #     self.rect.move_ip(0, 2)
+
+        if pressed_keys[K_DOWN]:
+            self.rect.move_ip(0, 3)
+            self.surf = \
+                pygame.image.load("./images/player_front.png").convert()
+            if pygame.sprite.spritecollideany(player, walls):
+                self.rect.move_ip(0, -3)
+            # if pygame.sprite.spritecollideany(player, bombs):
+            #     self.rect.move_ip(0, -3)
+
+        if pressed_keys[K_LEFT]:
+            self.rect.move_ip(-3, 0)
+            self.surf = \
+                pygame.image.load("./images/player_left.png").convert()
+            if pygame.sprite.spritecollideany(player, walls):
+                self.rect.move_ip(3, 0)
+            # if pygame.sprite.spritecollideany(player, bombs):
+            #     self.rect.move_ip(2, 0)
+
+        if pressed_keys[K_RIGHT]:
+            self.rect.move_ip(3, 0)
+            self.surf = \
+                pygame.image.load("./images/player_right.png").convert()
+            if pygame.sprite.spritecollideany(player, walls):
+                self.rect.move_ip(-3, 0)
+            # if pygame.sprite.spritecollideany(player, bombs):
+            #     self.rect.move_ip(-2, 0)
+
+        if pressed_keys[K_SPACE]:
+            if self.timer >= 60:
+                bomb = Bomb((self.rect.x, self.rect.y))
+                bombs.add(bomb)
+                all_sprites.add(bomb)
+                self.timer = 0
+                self.update(3)
+
+        if self.rect.left < 0:
+            self.rect.left = 0
+        if self.rect.right > SCREEN_WIDTH:
+            self.rect.right = SCREEN_WIDTH
+        if self.rect.top <= 0:
+            self.rect.top = 0
+        if self.rect.bottom >= SCREEN_HEIGHT:
+            self.rect.bottom = SCREEN_HEIGHT
+
+
+bombs = pygame.sprite.Group()
+
+
+class Bomb(pygame.sprite.Sprite):
+
+    def __init__(self, center_pos: tuple):
+        super().__init__()
+        self.width = DEFAULT_OBJECT_SIZE
+        self.height = DEFAULT_OBJECT_SIZE
+        self.surf = pygame.image.load("./images/bomb.png").convert_alpha()
+        self.surf.set_colorkey((105, 105, 105), RLEACCEL)
+        self.rect = self.surf.get_rect(center=center_pos)
 
 
 class Wall(pygame.sprite.Sprite):
@@ -37,8 +112,8 @@ class Wall(pygame.sprite.Sprite):
         super().__init__()
         self.width = DEFAULT_OBJECT_SIZE
         self.height = DEFAULT_OBJECT_SIZE
-        self.surf = pygame.Surface((self.width, self.height))
-        self.surf.fill((255, 255, 255))
+        self.surf = pygame.image.load("./images/wall.png").convert()
+        self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.surf.get_rect(center=center_pos)
 
     @staticmethod
