@@ -24,5 +24,5 @@ class Wall(pygame.sprite.Sprite):
                 center_width += 2 * wall_size[0]
             center_height += 2 * wall_size[1]
             center_width = wall_size[0] + wall_size[0] // 2
-
+        print(centers)
         return centers

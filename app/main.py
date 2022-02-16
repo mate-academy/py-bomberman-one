@@ -16,6 +16,7 @@ class Bomberman:
     def __init__(self):
         self.walls = None
         self.bombs = None
+        self.walls_center = None
         self.tmp_bombs = None
         self.all_sprites = None
         self.player = None
@@ -71,10 +72,12 @@ class Bomberman:
         self.all_sprites = pygame.sprite.Group()
         self.all_sprites.add(self.player)
 
-        for wall_center in Wall.create_centers_of_walls(
+        self.walls_center = Wall.create_centers_of_walls(
                 (SCREEN_WIDTH, SCREEN_HEIGHT),
                 (DEFAULT_OBJECT_SIZE, DEFAULT_OBJECT_SIZE)
-        ):
+        )
+
+        for wall_center in self.walls_center:
             wall = Wall(wall_center)
             self.walls.add(wall)
             self.all_sprites.add(wall)

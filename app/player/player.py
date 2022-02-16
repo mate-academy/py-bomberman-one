@@ -1,7 +1,7 @@
 import pygame
 from pygame import K_UP, K_DOWN, K_LEFT, K_RIGHT
 
-from app.settings import DEFAULT_SPEED, SCREEN_WIDTH, SCREEN_HEIGHT
+from app.settings import DEFAULT_SPEED, SCREEN_WIDTH, SCREEN_HEIGHT, DEFAULT_OBJECT_SIZE
 from app.weapons.bomb import Bomb
 
 
@@ -9,6 +9,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, bomberman):
         super(Player, self).__init__()
         self.bomberman = bomberman
+        self.bomb_center = None
         self.surf = pygame.Surface((20, 40))
         self.surf = pygame.image.load(
             "images/player_front.png"
@@ -90,6 +91,27 @@ class Player(pygame.sprite.Sprite):
         if self.is_planting >= 60:
             self.is_planting = 0
             x, y = self.rect.x, self.rect.y
-            center_bomb = Bomb((x, y)).create_centers_of_bombs((x, y))
+            x, y = self.compute_center(x, y)
+            print(x, y)
+            print(self.bomb_center)
+            center_bomb = Bomb((x, y))
 
-            return Bomb(center_bomb)
+            return center_bomb
+
+    def compute_center(self, x, y) -> tuple:
+        self.bomb_center = sorted((set(Bomb((x, y)).create_centers_of_bombs(
+            (SCREEN_WIDTH, SCREEN_HEIGHT),
+            (DEFAULT_OBJECT_SIZE, DEFAULT_OBJECT_SIZE))
+        )).difference(set(self.bomberman.walls_center)))
+
+        for x1, y1 in self.bomb_center:
+            if x in list(range(x1 - 25, x1 + 25)):
+                x = x1
+                if y in list(range(y1 - 25, y1 + 25)):
+                    y = y1
+                    return x, y
+
+
+
+
+

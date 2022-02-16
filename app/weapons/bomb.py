@@ -13,10 +13,15 @@ class Bomb(pygame.sprite.Sprite):
         self.rect = self.surf.get_rect(center=center_pos)
 
     @staticmethod
-    def create_centers_of_bombs(player_pos: tuple):
-        center_width = player_pos[0]
-        center_height = player_pos[1]
+    def create_centers_of_bombs(field_size: tuple, wall_size: tuple):
+        center_width = wall_size[0] // 2  # 75
+        center_height = wall_size[1] // 2  # 75
+        centers = []
 
-        center_pos = (center_width, center_height)
-
-        return center_pos
+        while center_height < field_size[1]:
+            while center_width < field_size[0]:
+                centers.append((center_width, center_height))
+                center_width += 2 * wall_size[0] // 2
+            center_height += 2 * wall_size[1] // 2
+            center_width = wall_size[0] // 2
+        return centers
