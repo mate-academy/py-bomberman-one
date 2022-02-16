@@ -50,7 +50,8 @@ class Player(pygame.sprite.Sprite):
 
         if pressed_keys[K_DOWN]:
             self.rect.move_ip(0, 3)
-            self.surf = pygame.image.load("./images/player_front.png").convert()
+            self.surf = \
+                pygame.image.load("./images/player_front.png").convert()
             if pygame.sprite.spritecollideany(player, walls):
                 self.rect.move_ip(0, -3)
             # if pygame.sprite.spritecollideany(player, bombs):
@@ -58,7 +59,8 @@ class Player(pygame.sprite.Sprite):
 
         if pressed_keys[K_LEFT]:
             self.rect.move_ip(-3, 0)
-            self.surf = pygame.image.load("./images/player_left.png").convert()
+            self.surf = \
+                pygame.image.load("./images/player_left.png").convert()
             if pygame.sprite.spritecollideany(player, walls):
                 self.rect.move_ip(3, 0)
             # if pygame.sprite.spritecollideany(player, bombs):
@@ -66,7 +68,8 @@ class Player(pygame.sprite.Sprite):
 
         if pressed_keys[K_RIGHT]:
             self.rect.move_ip(3, 0)
-            self.surf = pygame.image.load("./images/player_right.png").convert()
+            self.surf = \
+                pygame.image.load("./images/player_right.png").convert()
             if pygame.sprite.spritecollideany(player, walls):
                 self.rect.move_ip(-3, 0)
             # if pygame.sprite.spritecollideany(player, bombs):
