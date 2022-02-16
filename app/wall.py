@@ -1,6 +1,6 @@
 import pygame
 
-from app.const import DEFAULT_OBJECT_SIZE, SCREEN_WIDTH, SCREEN_HEIGHT
+from app.settings import DEFAULT_OBJECT_SIZE, SCREEN_WIDTH, SCREEN_HEIGHT
 
 
 class Wall(pygame.sprite.Sprite):
