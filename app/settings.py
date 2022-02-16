@@ -21,4 +21,4 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 CRIMSON = (220, 20, 60)
 
-BACKGROUND = pygame.image.load(".\\images\\background3.png")
+BACKGROUND = pygame.image.load(".\\images\\background2.png")

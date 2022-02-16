@@ -1,11 +1,19 @@
 from app.Player.player import Player
 from app.Wall.wall import Wall
 from app.settings import *
+from app.music import *
 
 
 if __name__ == "__main__":
+    # Setup for sounds
+    pygame.mixer.init()
+
     pygame.init()
     clock = pygame.time.Clock()
+
+    # Sounds
+    pygame.mixer.music.load(".\\music\\bomberman.mp3")
+    pygame.mixer.music.play(loops=-1)
 
     screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 
@@ -49,4 +57,5 @@ if __name__ == "__main__":
         pygame.display.flip()
         clock.tick(60)
 
+    pygame.mixer.music.stop()
     pygame.quit()

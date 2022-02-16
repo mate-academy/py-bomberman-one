@@ -2,6 +2,7 @@ import pygame.image
 
 from app.settings import *
 from app.Bomb.bomb import Bomb
+from app.music import *
 
 
 class Player(pygame.sprite.Sprite):
@@ -10,6 +11,8 @@ class Player(pygame.sprite.Sprite):
         self.surf = pygame.image.load(".\\images\\player_front.png").convert_alpha()
         self.rect = self.surf.get_rect()
         self.frames = 0
+
+        self.set_bomb = pygame.mixer.Sound(".\\music\\Effects\\Bomberman SFX (1).wav")
 
     def update(self, pressed_keys, walls, bombs, all_sprites):
         self.frames += 1
@@ -40,6 +43,7 @@ class Player(pygame.sprite.Sprite):
 
         if pressed_keys[K_SPACE]:
             if self.frames > 60:
+                self.set_bomb.play()
                 bomb = Bomb((self.rect.x, self.rect.y))
 
                 bombs.add(bomb)
