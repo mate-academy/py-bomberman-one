@@ -1,18 +1,24 @@
-import pygame
+import os
 
+import pygame
 from pygame.locals import (
+    RLEACCEL,
+    K_SPACE,
     K_UP,
     K_DOWN,
     K_LEFT,
     K_RIGHT,
     K_ESCAPE,
     KEYDOWN,
-    QUIT,
+    QUIT
 )
+
+from app.bomb import Bomb
+from app.wall import Wall
+
 
 pygame.init()
 clock = pygame.time.Clock()
-
 
 SCREEN_WIDTH = 650
 SCREEN_HEIGHT = 650
@@ -23,43 +29,67 @@ screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
-        super(Player, self).__init__()
-        self.surf = pygame.Surface((20, 40))
-        self.surf.fill((0, 255, 0))
-        self.rect = self.surf.get_rect()
-
-    def update(self):
-        pass
-
-
-class Wall(pygame.sprite.Sprite):
-    def __init__(self, center_pos: tuple):
         super().__init__()
-        self.width = DEFAULT_OBJECT_SIZE
-        self.height = DEFAULT_OBJECT_SIZE
-        self.surf = pygame.Surface((self.width, self.height))
-        self.surf.fill((255, 255, 255))
-        self.rect = self.surf.get_rect(center=center_pos)
+        self.surf = pygame.Surface((40, 40))
+        self.surf = pygame.image.load(
+            os.path.join("images", "player_right.png")).convert_alpha()
+        self.surf.set_colorkey((255, 255, 255), RLEACCEL)
+        self.rect = self.surf.get_rect()
+        self.bomb_delay = 1000
+        self.last_bomb = pygame.time.get_ticks()
 
-    @staticmethod
-    def create_centers_of_walls(field_size: tuple, wall_size: tuple):
-        center_width = wall_size[0] + wall_size[0] // 2
-        center_height = wall_size[1] + wall_size[1] // 2
-        centers = []
+    def update(self, pressed_keys):
+        if pressed_keys[K_UP]:
+            self.surf = pygame.image.load(
+                os.path.join("images", "player_back.png")).convert_alpha()
+            self.rect.move_ip(0, -5)
+            if pygame.sprite.spritecollideany(self, walls):
+                self.rect.move_ip(0, 5)
+        if pressed_keys[K_DOWN]:
+            self.surf = pygame.image.load(
+                os.path.join("images", "player_front.png")).convert_alpha()
+            self.rect.move_ip(0, 5)
+            if pygame.sprite.spritecollideany(self, walls):
+                self.rect.move_ip(0, -5)
+        if pressed_keys[K_LEFT]:
+            self.surf = pygame.image.load(
+                os.path.join("images", "player_left.png")).convert_alpha()
+            self.rect.move_ip(-5, 0)
+            if pygame.sprite.spritecollideany(self, walls):
+                self.rect.move_ip(5, 0)
+        if pressed_keys[K_RIGHT]:
+            self.surf = pygame.image.load(
+                os.path.join("images", "player_right.png")).convert_alpha()
+            self.rect.move_ip(5, 0)
+            if pygame.sprite.spritecollideany(self, walls):
+                self.rect.move_ip(-5, 0)
+        if pressed_keys[K_SPACE]:
+            self.plant_bomb()
 
-        while center_height < field_size[1] - wall_size[1]:
-            while center_width < field_size[0] - wall_size[0]:
-                centers.append((center_width, center_height))
-                center_width += 2 * wall_size[0]
-            center_height += 2 * wall_size[1]
-            center_width = wall_size[0] + wall_size[0] // 2
+        if self.rect.left < 0:
+            self.rect.left = 0
+        if self.rect.right > SCREEN_WIDTH:
+            self.rect.right = SCREEN_WIDTH
+        if self.rect.top <= 0:
+            self.rect.top = 0
+        if self.rect.bottom >= SCREEN_HEIGHT:
+            self.rect.bottom = SCREEN_HEIGHT
 
-        return centers
+    def plant_bomb(self):
+        now = pygame.time.get_ticks()
+        if now - self.last_bomb > self.bomb_delay:
+            self.last_bomb = now
+            x = self.rect.centerx // 50 * 50 + 25
+            y = self.rect.centery // 50 * 50 + 25
+            bomb = Bomb((x, y))
+            all_sprites.add(bomb)
+            bombs.add(bomb)
 
 
 player = Player()
 
 walls = pygame.sprite.Group()
+bombs = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 all_sprites.add(player)
 
@@ -81,7 +111,7 @@ while running:
         elif event.type == QUIT:
             running = False
 
-    player.update()
+    player.update(pygame.key.get_pressed())
 
     walls.update()
 
