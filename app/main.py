@@ -12,6 +12,7 @@ if __name__ == "__main__":
     player = Player()
 
     walls = pygame.sprite.Group()
+    bombs = pygame.sprite.Group()
     all_sprites = pygame.sprite.Group()
     all_sprites.add(player)
 
@@ -27,7 +28,6 @@ if __name__ == "__main__":
     while running:
         for event in pygame.event.get():
             if event.type == KEYDOWN:
-
                 if event.key == K_ESCAPE:
                     running = False
 
@@ -37,10 +37,11 @@ if __name__ == "__main__":
         # Get all currently pressed
         pressed_keys = pygame.key.get_pressed()
         # Update the player sprite based on user key presses
-        player.update(pressed_keys, walls)
+        player.update(pressed_keys, walls, bombs, all_sprites)
         walls.update()
 
-        screen.fill(BLACK)
+        # Background
+        screen.blit(BACKGROUND, (0, 0))
 
         for sprite in all_sprites:
             screen.blit(sprite.surf, sprite.rect)
