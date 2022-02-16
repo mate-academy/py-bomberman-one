@@ -16,6 +16,7 @@ class Bomberman:
     def __init__(self):
         self.walls = None
         self.bombs = None
+        self.tmp_bombs = None
         self.all_sprites = None
         self.player = None
         self.pressed_keys = None
@@ -32,13 +33,18 @@ class Bomberman:
                     if event.key == pygame.K_SPACE:
                         self.bomb = self.player.plant_bomb()
                         if self.bomb:
-                            self.bombs.add(self.bomb)
+                            self.tmp_bombs.add(self.bomb)
                             self.all_sprites.add(self.bomb)
 
                 elif event.type == QUIT:
                     self.running = False
 
             self.pressed_keys = pygame.key.get_pressed()
+
+            if self.bomb:
+                if not pygame.sprite.spritecollideany(
+                        self.player, self.tmp_bombs):
+                    self.bombs.add(self.bomb)
 
             self.player.update()
 
@@ -60,6 +66,7 @@ class Bomberman:
 
         self.walls = pygame.sprite.Group()
         self.bombs = pygame.sprite.Group()
+        self.tmp_bombs = pygame.sprite.Group()
 
         self.all_sprites = pygame.sprite.Group()
         self.all_sprites.add(self.player)
