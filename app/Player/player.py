@@ -8,37 +8,45 @@ from app.music import *
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
-        self.surf = pygame.image.load(".\\images\\player_front.png").convert_alpha()
+        self.surf = player_front.convert_alpha()
         self.rect = self.surf.get_rect()
         self.frames = 0
 
-        self.set_bomb = pygame.mixer.Sound(".\\music\\Effects\\Bomberman SFX (1).wav")
+        self.set_bomb = pygame.mixer.Sound(".\\music\\Effects\\bomb.mp3")
 
     def update(self, pressed_keys, walls, bombs, all_sprites):
         self.frames += 1
 
         if pressed_keys[K_UP]:
-            self.surf = pygame.image.load(".\\images\\player_back.png").convert_alpha()
+            self.surf = player_back.convert_alpha()
+
             self.rect.move_ip(0, -5)
-            if pygame.sprite.spritecollideany(self, walls):
+            if pygame.sprite.spritecollideany(self, walls)\
+                    or pygame.sprite.spritecollideany(self, bombs):
                 self.rect.move_ip(0, 5)
 
         if pressed_keys[K_DOWN]:
-            self.surf = pygame.image.load(".\\images\\player_front.png").convert_alpha()
+            self.surf = player_front.convert_alpha()
+
             self.rect.move_ip(0, 5)
-            if pygame.sprite.spritecollideany(self, walls):
+            if pygame.sprite.spritecollideany(self, walls)\
+                    or pygame.sprite.spritecollideany(self, bombs):
                 self.rect.move_ip(0, -5)
 
         if pressed_keys[K_LEFT]:
-            self.surf = pygame.image.load(".\\images\\player_left.png").convert_alpha()
+            self.surf = player_left.convert_alpha()
+
             self.rect.move_ip(-5, 0)
-            if pygame.sprite.spritecollideany(self, walls):
+            if pygame.sprite.spritecollideany(self, walls)\
+                    or pygame.sprite.spritecollideany(self, bombs):
                 self.rect.move_ip(5, 0)
 
         if pressed_keys[K_RIGHT]:
-            self.surf = pygame.image.load(".\\images\\player_right.png").convert_alpha()
+            self.surf = player_right.convert_alpha()
+
             self.rect.move_ip(5, 0)
-            if pygame.sprite.spritecollideany(self, walls):
+            if pygame.sprite.spritecollideany(self, walls)\
+                    or pygame.sprite.spritecollideany(self, bombs):
                 self.rect.move_ip(-5, 0)
 
         if pressed_keys[K_SPACE]:
@@ -51,6 +59,12 @@ class Player(pygame.sprite.Sprite):
                 bombs.update()
 
                 self.frames = 0
+
+                # Move after bomb planted
+                self.rect.x += 50
+                if pygame.sprite.spritecollideany(self, walls):
+                    self.rect.x -= 50
+                    self.rect.y += 50
 
         self.keep_on_screen()
 
@@ -66,7 +80,3 @@ class Player(pygame.sprite.Sprite):
 
         if self.rect.bottom >= SCREEN_HEIGHT:
             self.rect.bottom = SCREEN_HEIGHT
-
-    def keep_out_the_bomb(self):
-        pass
-        # TODO function that keep out from a bombs

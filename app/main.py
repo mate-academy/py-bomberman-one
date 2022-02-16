@@ -1,20 +1,21 @@
 from app.Player.player import Player
 from app.Wall.wall import Wall
 from app.settings import *
-from app.music import *
 
 
 if __name__ == "__main__":
     # Setup for sounds
     pygame.mixer.init()
 
+    # Initialize program
     pygame.init()
     clock = pygame.time.Clock()
 
-    # Sounds
-    pygame.mixer.music.load(".\\music\\bomberman.mp3")
+    # Background music
+    pygame.mixer.music.load(".\\music\\main_melody.mp3")
     pygame.mixer.music.play(loops=-1)
 
+    # Set screen size
     screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 
     player = Player()
@@ -49,7 +50,7 @@ if __name__ == "__main__":
         walls.update()
 
         # Background
-        screen.blit(BACKGROUND, (0, 0))
+        screen.blit(grass_img, (0, 0))
 
         for sprite in all_sprites:
             screen.blit(sprite.surf, sprite.rect)
