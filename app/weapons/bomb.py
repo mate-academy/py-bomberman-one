@@ -14,8 +14,8 @@ class Bomb(pygame.sprite.Sprite):
 
     @staticmethod
     def create_centers_of_bombs(field_size: tuple, wall_size: tuple):
-        center_width = wall_size[0] // 2  # 75
-        center_height = wall_size[1] // 2  # 75
+        center_width = wall_size[0] // 2
+        center_height = wall_size[1] // 2
         centers = []
 
         while center_height < field_size[1]:
