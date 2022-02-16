@@ -73,8 +73,8 @@ class Bomberman:
         self.all_sprites.add(self.player)
 
         self.walls_center = Wall.create_centers_of_walls(
-                (SCREEN_WIDTH, SCREEN_HEIGHT),
-                (DEFAULT_OBJECT_SIZE, DEFAULT_OBJECT_SIZE)
+            (SCREEN_WIDTH, SCREEN_HEIGHT),
+            (DEFAULT_OBJECT_SIZE, DEFAULT_OBJECT_SIZE)
         )
 
         for wall_center in self.walls_center:

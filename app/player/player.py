@@ -1,7 +1,11 @@
 import pygame
 from pygame import K_UP, K_DOWN, K_LEFT, K_RIGHT
 
-from app.settings import DEFAULT_SPEED, SCREEN_WIDTH, SCREEN_HEIGHT, DEFAULT_OBJECT_SIZE
+from app.settings import (
+    DEFAULT_SPEED,
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT,
+    DEFAULT_OBJECT_SIZE)
 from app.weapons.bomb import Bomb
 
 
@@ -110,8 +114,3 @@ class Player(pygame.sprite.Sprite):
                 if y in list(range(y1 - 25, y1 + 25)):
                     y = y1
                     return x, y
-
-
-
-
-
