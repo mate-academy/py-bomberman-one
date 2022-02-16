@@ -1,6 +1,10 @@
-from constants import *
+from constants import SCREEN_WIDTH, SCREEN_HEIGHT, DEFAULT_OBJECT_SIZE,\
+    PLAYER_FRONT, PLAYER_BACK, PLAYER_LEFT, PLAYER_RIGHT
+from app.bomb import Bomb
+from app.walls import Wall
 import pygame
 import time
+
 
 from pygame.locals import (
     K_UP,
@@ -73,38 +77,6 @@ class Player(pygame.sprite.Sprite):
         Player.timeout = time.time()
 
 
-class Wall(pygame.sprite.Sprite):
-    def __init__(self, center_pos: tuple):
-        super().__init__()
-        self.width = DEFAULT_OBJECT_SIZE
-        self.height = DEFAULT_OBJECT_SIZE
-        self.surf = pygame.image.load(WALL)
-        self.rect = self.surf.get_rect(center=center_pos)
-
-    @staticmethod
-    def create_centers_of_walls(field_size: tuple, wall_size: tuple):
-        center_width = wall_size[0] + wall_size[0] // 2
-        center_height = wall_size[1] + wall_size[1] // 2
-        centers = []
-
-        while center_height < field_size[1] - wall_size[1]:
-            while center_width < field_size[0] - wall_size[0]:
-                centers.append((center_width, center_height))
-                center_width += 2 * wall_size[0]
-            center_height += 2 * wall_size[1]
-            center_width = wall_size[0] + wall_size[0] // 2
-
-        return centers
-
-
-class Bomb(pygame.sprite.Sprite):
-    def __init__(self, player):
-        super().__init__()
-        self.surf = pygame.image.load(BOMB)
-        self.player = player
-        self.rect = player.rect.center
-
-
 player = Player()
 
 walls = pygame.sprite.Group()
@@ -114,7 +86,8 @@ all_sprites.add(player)
 
 
 for wall_center in Wall.create_centers_of_walls(
-        (SCREEN_WIDTH, SCREEN_HEIGHT), (DEFAULT_OBJECT_SIZE, DEFAULT_OBJECT_SIZE)
+        (SCREEN_WIDTH, SCREEN_HEIGHT),
+        (DEFAULT_OBJECT_SIZE, DEFAULT_OBJECT_SIZE)
 ):
     wall = Wall(wall_center)
     walls.add(wall)
