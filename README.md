@@ -36,7 +36,7 @@ planting.
 You can store timeout in the attribute and reduce it in `update` method.
 6. Replace simple colored rectangles with images given in `"app/images/`. Use
 `pygame.image.load("source.png").convert_alpha()` instead of `Surface`. The player
-image should change when he goes in different directions.[Sprite images](https://realpython.com/pygame-a-primer/#sprite-images)
+image should change when he goes in different directions. [Sprite images](https://realpython.com/pygame-a-primer/#sprite-images)
 
 All information you can find in guides links on the top of the tasks.
 
