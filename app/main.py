@@ -1,6 +1,7 @@
 import pygame
 
 from pygame.locals import (
+    RLEACCEL,
     K_UP,
     K_DOWN,
     K_LEFT,
@@ -25,18 +26,30 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
         self.surf = pygame.Surface((20, 40))
-        self.surf.fill((0, 255, 0))
+        self.surf = pygame.image.load("images/player_front.png").convert_alpha()
         self.rect = self.surf.get_rect()
 
     def update(self, pressed_keys):
         if pressed_keys[K_UP]:
             self.rect.move_ip(0, -2)
+            if pygame.sprite.spritecollideany(player, walls):
+                self.rect.move_ip(0, 2)
+            self.surf = pygame.image.load("images/player_back.png").convert_alpha()
         if pressed_keys[K_DOWN]:
             self.rect.move_ip(0, 2)
+            if pygame.sprite.spritecollideany(player, walls):
+                self.rect.move_ip(0, -2)
+            self.surf = pygame.image.load("images/player_front.png").convert_alpha()
         if pressed_keys[K_LEFT]:
             self.rect.move_ip(-2, 0)
+            if pygame.sprite.spritecollideany(player, walls):
+                self.rect.move_ip(2, 0)
+            self.surf = pygame.image.load("images/player_left.png").convert_alpha()
         if pressed_keys[K_RIGHT]:
             self.rect.move_ip(2, 0)
+            if pygame.sprite.spritecollideany(player, walls):
+                self.rect.move_ip(-2, 0)
+            self.surf = pygame.image.load("images/player_right.png").convert_alpha()
 
         if self.rect.left < 0:
             self.rect.left = 0
@@ -53,8 +66,8 @@ class Wall(pygame.sprite.Sprite):
         super().__init__()
         self.width = DEFAULT_OBJECT_SIZE
         self.height = DEFAULT_OBJECT_SIZE
-        self.surf = pygame.Surface((self.width, self.height))
-        self.surf.fill((255, 255, 255))
+        self.surf = pygame.image.load("images/wall.png").convert_alpha()
+        self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.surf.get_rect(center=center_pos)
 
     @staticmethod
@@ -107,6 +120,11 @@ while running:
 
     for sprite in all_sprites:
         screen.blit(sprite.surf, sprite.rect)
+
+    if pygame.sprite.spritecollideany(player, walls):
+        pass
+
+
 
     pygame.display.flip()
     clock.tick(60)
