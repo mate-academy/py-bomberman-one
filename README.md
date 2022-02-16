@@ -9,7 +9,7 @@ You could play the game Bomberman in your youth or childhood, now
 it is time to write your own a little modified version.
 You already have an initial structure of the game Bomberman.
 
-![Example](https://user-images.githubusercontent.com/80070761/153867128-3e78f7d2-1231-46f2-8e8a-af35caa03e24.png)
+<img width="290" alt="Example" src="https://user-images.githubusercontent.com/80070761/154217048-7d2a3451-8819-4a85-a00f-c01ba6be66c3.png">
 
 There are `player` (green rectangle) and `walls` (white squares).
 You should implement these features:
