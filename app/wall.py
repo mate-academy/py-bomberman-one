@@ -9,7 +9,7 @@ class Wall(pygame.sprite.Sprite):
         super().__init__()
         self.width = DEFAULT_OBJECT_SIZE
         self.height = DEFAULT_OBJECT_SIZE
-        self.surf = self.surf = pygame.image.load("./images/wall.png").convert()
+        self.surf = pygame.image.load("./images/wall.png").convert()
         self.rect = self.surf.get_rect(center=center_pos)
 
     @staticmethod

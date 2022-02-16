@@ -1,4 +1,4 @@
-import time
+# import time
 
 import pygame
 from bomb import Bomb
@@ -43,17 +43,20 @@ class Player(pygame.sprite.Sprite):
             if pygame.sprite.spritecollideany(self, group=walls):
                 self.rect.move_ip(2, 0)
         elif pressed_keys[K_RIGHT]:
-            self.surf = pygame.image.load("./images/player_right.png").convert()
+            self.surf = \
+                pygame.image.load("./images/player_right.png").convert()
             self.rect.move_ip(2, 0)
             if pygame.sprite.spritecollideany(self, group=walls):
                 self.rect.move_ip(-2, 0)
         elif pressed_keys[K_UP]:
-            self.surf = pygame.image.load("./images/player_back.png").convert()
+            self.surf = \
+                pygame.image.load("./images/player_back.png").convert()
             self.rect.move_ip(0, -2)
             if pygame.sprite.spritecollideany(self, group=walls):
                 self.rect.move_ip(0, 2)
         elif pressed_keys[K_DOWN]:
-            self.surf = pygame.image.load("./images/player_front.png").convert()
+            self.surf = \
+                pygame.image.load("./images/player_front.png").convert()
             self.rect.move_ip(0, 2)
             if pygame.sprite.spritecollideany(self, group=walls):
                 self.rect.move_ip(0, -2)
