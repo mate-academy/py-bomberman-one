@@ -1,0 +1,9 @@
+SCREEN_WIDTH = 650
+SCREEN_HEIGHT = 650
+DEFAULT_OBJECT_SIZE = 50
+PLAYER_FRONT = "images/player_front.png"
+PLAYER_BACK = "images/player_back.png"
+PLAYER_LEFT = "images/player_left.png"
+PLAYER_RIGHT = "images/player_right.png"
+WALL = "images/wall.png"
+BOMB = "images/bomb.png"
