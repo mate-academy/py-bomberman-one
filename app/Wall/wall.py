@@ -1,4 +1,5 @@
-from app.settings import *
+import pygame
+from app.settings import DEFAULT_OBJECT_SIZE
 
 
 class Wall(pygame.sprite.Sprite):

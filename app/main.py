@@ -1,7 +1,17 @@
+import pygame
 from app.Player.player import Player
 from app.Wall.wall import Wall
-from app.settings import *
-
+from pygame.locals import (
+    K_ESCAPE,
+    KEYDOWN,
+    QUIT,
+)
+from app.settings import (
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT,
+    DEFAULT_OBJECT_SIZE,
+    grass_img,
+)
 
 if __name__ == "__main__":
     # Setup for sounds
@@ -26,7 +36,8 @@ if __name__ == "__main__":
     all_sprites.add(player)
 
     for wall_center in Wall.create_centers_of_walls(
-        (SCREEN_WIDTH, SCREEN_HEIGHT), (DEFAULT_OBJECT_SIZE, DEFAULT_OBJECT_SIZE)
+        (SCREEN_WIDTH, SCREEN_HEIGHT),
+        (DEFAULT_OBJECT_SIZE, DEFAULT_OBJECT_SIZE)
     ):
         wall = Wall(wall_center)
         walls.add(wall)

@@ -1,8 +1,20 @@
 import pygame.image
-
-from app.settings import *
 from app.Bomb.bomb import Bomb
-from app.music import *
+from pygame.locals import (
+    K_UP,
+    K_DOWN,
+    K_LEFT,
+    K_RIGHT,
+    K_SPACE,
+)
+from app.settings import (
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT,
+    player_back,
+    player_front,
+    player_left,
+    player_right
+)
 
 
 class Player(pygame.sprite.Sprite):

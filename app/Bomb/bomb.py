@@ -1,4 +1,5 @@
-from app.settings import *
+import pygame.image
+from app.settings import DEFAULT_OBJECT_SIZE
 
 
 class Bomb(pygame.sprite.Sprite):
