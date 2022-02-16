@@ -1,8 +1,13 @@
 import pygame
 
 
-from app.settings import KEYDOWN, K_ESCAPE, QUIT, SCREEN_WIDTH, SCREEN_HEIGHT
+from pygame.locals import (
+    K_ESCAPE,
+    KEYDOWN,
+    QUIT,
+)
 from app.player import Player
+from app.settings import SCREEN_WIDTH, SCREEN_HEIGHT
 from app.wall import Wall
 
 pygame.init()

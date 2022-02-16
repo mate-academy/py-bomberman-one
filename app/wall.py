@@ -29,7 +29,8 @@ class Wall(pygame.sprite.Sprite):
     @staticmethod
     def create_walls(walls, all_sprites):
         for wall_center in Wall.create_centers_of_walls(
-                (SCREEN_WIDTH, SCREEN_HEIGHT), (DEFAULT_OBJECT_SIZE, DEFAULT_OBJECT_SIZE)
+                (SCREEN_WIDTH, SCREEN_HEIGHT),
+                (DEFAULT_OBJECT_SIZE, DEFAULT_OBJECT_SIZE)
         ):
             wall = Wall(wall_center)
             walls.add(wall)

@@ -2,43 +2,56 @@ import pygame
 
 
 from app.bomb import Bomb
-from app.settings import K_UP, K_DOWN, K_LEFT, K_RIGHT, K_SPACE,\
-    SCREEN_WIDTH, SCREEN_HEIGHT, DEFAULT_OBJECT_SIZE
+from pygame.locals import (
+    K_UP,
+    K_DOWN,
+    K_LEFT,
+    K_RIGHT,
+    K_SPACE,
+)
+
+from app.settings import SCREEN_WIDTH, \
+    SCREEN_HEIGHT, DEFAULT_OBJECT_SIZE, DEFAULT_SPEED
 
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.surf = pygame.Surface((20, 40))
-        self.surf = pygame.image.load("images/player_front.png").convert_alpha()
+        self.surf = pygame.image.load("images/player_front.png").\
+            convert_alpha()
         self.rect = self.surf.get_rect()
         self.timer = 60
 
     def update(self, pressed_keys, walls, bombs_group, all_sprites_group):
 
         if pressed_keys[K_UP]:
-            self.rect.move_ip(0, -2)
+            self.rect.move_ip(0, -DEFAULT_SPEED)
             if pygame.sprite.spritecollideany(self, walls):
-                self.rect.move_ip(0, 2)
-            self.surf = pygame.image.load("images/player_back.png").convert_alpha()
+                self.rect.move_ip(0, DEFAULT_SPEED)
+            self.surf = pygame.image.load("images/player_back.png").\
+                convert_alpha()
 
         if pressed_keys[K_DOWN]:
-            self.rect.move_ip(0, 2)
+            self.rect.move_ip(0, DEFAULT_SPEED)
             if pygame.sprite.spritecollideany(self, walls):
-                self.rect.move_ip(0, -2)
-            self.surf = pygame.image.load("images/player_front.png").convert_alpha()
+                self.rect.move_ip(0, -DEFAULT_SPEED)
+            self.surf = pygame.image.load("images/player_front.png").\
+                convert_alpha()
 
         if pressed_keys[K_LEFT]:
-            self.rect.move_ip(-2, 0)
+            self.rect.move_ip(-DEFAULT_SPEED, 0)
             if pygame.sprite.spritecollideany(self, walls):
-                self.rect.move_ip(2, 0)
-            self.surf = pygame.image.load("images/player_left.png").convert_alpha()
+                self.rect.move_ip(DEFAULT_SPEED, 0)
+            self.surf = pygame.image.load("images/player_left.png").\
+                convert_alpha()
 
         if pressed_keys[K_RIGHT]:
-            self.rect.move_ip(2, 0)
+            self.rect.move_ip(DEFAULT_SPEED, 0)
             if pygame.sprite.spritecollideany(self, walls):
-                self.rect.move_ip(-2, 0)
-            self.surf = pygame.image.load("images/player_right.png").convert_alpha()
+                self.rect.move_ip(-DEFAULT_SPEED, 0)
+            self.surf = pygame.image.load("images/player_right.png").\
+                convert_alpha()
 
         if pressed_keys[K_SPACE]:
             self.plant_bomb(bombs_group, all_sprites_group)
