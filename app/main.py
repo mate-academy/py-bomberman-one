@@ -1,96 +1,51 @@
-import pygame
-
-from pygame.locals import (
-    K_UP,
-    K_DOWN,
-    K_LEFT,
-    K_RIGHT,
-    K_ESCAPE,
-    KEYDOWN,
-    QUIT,
-)
-
-pygame.init()
-clock = pygame.time.Clock()
+from app.Player.player import Player
+from app.Wall.wall import Wall
+from app.settings import *
 
 
-SCREEN_WIDTH = 650
-SCREEN_HEIGHT = 650
-DEFAULT_OBJECT_SIZE = 50
+if __name__ == "__main__":
+    pygame.init()
+    clock = pygame.time.Clock()
 
-screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
+    screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 
+    player = Player()
 
-class Player(pygame.sprite.Sprite):
-    def __init__(self):
-        super(Player, self).__init__()
-        self.surf = pygame.Surface((20, 40))
-        self.surf.fill((0, 255, 0))
-        self.rect = self.surf.get_rect()
+    walls = pygame.sprite.Group()
+    all_sprites = pygame.sprite.Group()
+    all_sprites.add(player)
 
-    def update(self):
-        pass
+    for wall_center in Wall.create_centers_of_walls(
+        (SCREEN_WIDTH, SCREEN_HEIGHT), (DEFAULT_OBJECT_SIZE, DEFAULT_OBJECT_SIZE)
+    ):
+        wall = Wall(wall_center)
+        walls.add(wall)
+        all_sprites.add(wall)
 
+    running = True
 
-class Wall(pygame.sprite.Sprite):
-    def __init__(self, center_pos: tuple):
-        super().__init__()
-        self.width = DEFAULT_OBJECT_SIZE
-        self.height = DEFAULT_OBJECT_SIZE
-        self.surf = pygame.Surface((self.width, self.height))
-        self.surf.fill((255, 255, 255))
-        self.rect = self.surf.get_rect(center=center_pos)
+    while running:
+        for event in pygame.event.get():
+            if event.type == KEYDOWN:
 
-    @staticmethod
-    def create_centers_of_walls(field_size: tuple, wall_size: tuple):
-        center_width = wall_size[0] + wall_size[0] // 2
-        center_height = wall_size[1] + wall_size[1] // 2
-        centers = []
+                if event.key == K_ESCAPE:
+                    running = False
 
-        while center_height < field_size[1] - wall_size[1]:
-            while center_width < field_size[0] - wall_size[0]:
-                centers.append((center_width, center_height))
-                center_width += 2 * wall_size[0]
-            center_height += 2 * wall_size[1]
-            center_width = wall_size[0] + wall_size[0] // 2
-
-        return centers
-
-
-player = Player()
-
-walls = pygame.sprite.Group()
-all_sprites = pygame.sprite.Group()
-all_sprites.add(player)
-
-for wall_center in Wall.create_centers_of_walls(
-    (SCREEN_WIDTH, SCREEN_HEIGHT), (DEFAULT_OBJECT_SIZE, DEFAULT_OBJECT_SIZE)
-):
-    wall = Wall(wall_center)
-    walls.add(wall)
-    all_sprites.add(wall)
-
-running = True
-
-while running:
-    for event in pygame.event.get():
-        if event.type == KEYDOWN:
-            if event.key == K_ESCAPE:
+            elif event.type == QUIT:
                 running = False
 
-        elif event.type == QUIT:
-            running = False
+        # Get all currently pressed
+        pressed_keys = pygame.key.get_pressed()
+        # Update the player sprite based on user key presses
+        player.update(pressed_keys, walls)
+        walls.update()
 
-    player.update()
+        screen.fill(BLACK)
 
-    walls.update()
+        for sprite in all_sprites:
+            screen.blit(sprite.surf, sprite.rect)
 
-    screen.fill((0, 0, 0))
+        pygame.display.flip()
+        clock.tick(60)
 
-    for sprite in all_sprites:
-        screen.blit(sprite.surf, sprite.rect)
-
-    pygame.display.flip()
-    clock.tick(60)
-
-pygame.quit()
+    pygame.quit()
