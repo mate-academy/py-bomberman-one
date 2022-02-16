@@ -6,6 +6,7 @@ Border = namedtuple(
     'left right top bottom',
 )
 
+
 class Player(sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()

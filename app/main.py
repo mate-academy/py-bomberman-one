@@ -41,7 +41,10 @@ class BomberGame:
         pygame.init()
         self.clock = pygame.time.Clock()
 
-        self.screen = pygame.display.set_mode([self.SCREEN_WIDTH, self.SCREEN_HEIGHT])
+        self.screen = pygame.display.set_mode([
+            self.SCREEN_WIDTH,
+            self.SCREEN_HEIGHT,
+        ])
 
     def _init_game_objects(self):
         self._player = Player()
@@ -53,7 +56,8 @@ class BomberGame:
         self._bombs = pygame.sprite.Group()
 
         for wall_center in Wall.create_centers_of_walls(
-                (self.SCREEN_WIDTH, self.SCREEN_HEIGHT), (self.DEFAULT_OBJECT_SIZE, self.DEFAULT_OBJECT_SIZE)
+                (self.SCREEN_WIDTH, self.SCREEN_HEIGHT),
+                (self.DEFAULT_OBJECT_SIZE, self.DEFAULT_OBJECT_SIZE)
         ):
             wall = Wall(
                 wall_center,
@@ -108,12 +112,14 @@ class BomberGame:
 
     def _move_player(self):
         self._player.move(self.player_direction)
-        if not self._validate_player_position() or pygame.sprite.spritecollideany(self._player, self.walls):
+        if (not self._validate_player_position()
+                or pygame.sprite.spritecollideany(self._player, self.walls)):
             self._player.move(self.player_opposite_direction)
 
     def _plant_bomb(self):
         if (self._planting_time is None
-                or pygame.time.get_ticks() - self._planting_time >= self.TIME_BEFORE_BOMBS):
+                or (pygame.time.get_ticks() - self._planting_time
+                    >= self.TIME_BEFORE_BOMBS)):
             self._planting_time = pygame.time.get_ticks()
             planted_bomb = Bomb.create_bomb(self._player.borders)
             self._bombs.add(planted_bomb)
