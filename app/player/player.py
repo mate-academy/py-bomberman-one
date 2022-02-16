@@ -31,7 +31,7 @@ class Player(pygame.sprite.Sprite):
                 self.rect.move_ip(0, SPEED)
         elif pressed_keys[K_DOWN]:
             self.surf = pygame.image.load("./images/player_front.png")
-            self.rect.move_ip(0, 3)
+            self.rect.move_ip(0, SPEED)
             if pygame.sprite.spritecollideany(self, walls):
                 self.rect.move_ip(0, -SPEED)
 
