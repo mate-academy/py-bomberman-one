@@ -82,10 +82,10 @@ class Player(pygame.sprite.Sprite):
         now = pygame.time.get_ticks()
         if now - self.last_bomb > self.bomb_delay:
             self.last_bomb = now
-            x = (self.rect.centerx // DEFAULT_OBJECT_SIZE *
-                 DEFAULT_OBJECT_SIZE) + DEFAULT_OBJECT_SIZE // 2
-            y = (self.rect.centery // DEFAULT_OBJECT_SIZE *
-                 DEFAULT_OBJECT_SIZE) + DEFAULT_OBJECT_SIZE // 2
+            x = (self.rect.centerx // DEFAULT_OBJECT_SIZE
+                 * DEFAULT_OBJECT_SIZE) + DEFAULT_OBJECT_SIZE // 2
+            y = (self.rect.centery // DEFAULT_OBJECT_SIZE
+                 * DEFAULT_OBJECT_SIZE) + DEFAULT_OBJECT_SIZE // 2
             self.bomb = Bomb((x, y))
             all_sprites.add(self.bomb)
             temp_bombs.add(self.bomb)
