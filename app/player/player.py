@@ -70,6 +70,18 @@ class Player(pygame.sprite.Sprite):
                 self.position_bomb = boom.rect.center
                 self.counter = 0
 
+        self.collision_with_bombs(bombs)
+
+        if self.rect.left < 0:
+            self.rect.left = 0
+        if self.rect.right > SCREEN_WIDTH:
+            self.rect.right = SCREEN_WIDTH
+        if self.rect.top <= 0:
+            self.rect.top = 0
+        if self.rect.bottom >= SCREEN_HEIGHT:
+            self.rect.bottom = SCREEN_HEIGHT
+
+    def collision_with_bombs(self, bombs):
         position_player = self.rect.center
         if (self.position_bomb[1] - Player.DIFFERENCE_BETWEEN_OBJECT > position_player[1] or
             self.position_bomb[1] + Player.DIFFERENCE_BETWEEN_OBJECT < position_player[1]) or (
@@ -80,12 +92,3 @@ class Player(pygame.sprite.Sprite):
                 bombs.add(self.get_bomb)
                 self.get_bomb = None
                 self.position_bomb = (0, 0)
-
-        if self.rect.left < 0:
-            self.rect.left = 0
-        if self.rect.right > SCREEN_WIDTH:
-            self.rect.right = SCREEN_WIDTH
-        if self.rect.top <= 0:
-            self.rect.top = 0
-        if self.rect.bottom >= SCREEN_HEIGHT:
-            self.rect.bottom = SCREEN_HEIGHT
