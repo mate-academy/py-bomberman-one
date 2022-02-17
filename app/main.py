@@ -1,11 +1,13 @@
 import pygame
 
 from pygame.locals import (
+    RLEACCEL,
     K_UP,
     K_DOWN,
     K_LEFT,
     K_RIGHT,
     K_ESCAPE,
+    K_SPACE,
     KEYDOWN,
     QUIT,
 )
@@ -24,12 +26,52 @@ screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
-        self.surf = pygame.Surface((20, 40))
-        self.surf.fill((0, 255, 0))
+        self.surf = pygame.image.load("images/player_front.png").convert_alpha()
+        self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.surf.get_rect()
+        self.plant_bomb_waiting = 0
+        self.is_on_bomb = False
 
-    def update(self):
-        pass
+    def update(self, pressed_keys):
+        if pressed_keys[K_UP]:
+            self.rect.move_ip(0, -5)
+            if pygame.sprite.spritecollideany(self, walls):
+                self.rect.move_ip(0, 5)
+        if pressed_keys[K_DOWN]:
+            self.rect.move_ip(0, 5)
+            if pygame.sprite.spritecollideany(self, walls):
+                self.rect.move_ip(0, -5)
+        if pressed_keys[K_LEFT]:
+            self.rect.move_ip(-5, 0)
+            if pygame.sprite.spritecollideany(self, walls):
+                self.rect.move_ip(5, 0)
+        if pressed_keys[K_RIGHT]:
+            self.rect.move_ip(5, 0)
+            if pygame.sprite.spritecollideany(self, walls):
+                self.rect.move_ip(-5, 0)
+        if pressed_keys[K_SPACE]:
+            self.put_bomb()
+            self.is_on_bomb = True
+        if not pygame.sprite.spritecollideany(self, bombs):
+            self.is_on_bomb = False
+
+        if self.rect.left < 0:
+            self.rect.left = 0
+        if self.rect.right > SCREEN_WIDTH:
+            self.rect.right = SCREEN_WIDTH
+        if self.rect.top <= 0:
+            self.rect.top = 0
+        if self.rect.bottom >= SCREEN_HEIGHT:
+            self.rect.bottom = SCREEN_HEIGHT
+
+    def put_bomb(self):
+        if self.plant_bomb_waiting:
+            self.plant_bomb_waiting -= 1
+        else:
+            new_bomb = Bomb(self.rect.center)
+            self.plant_bomb_waiting = 60
+
+            return new_bomb
 
 
 class Wall(pygame.sprite.Sprite):
@@ -37,8 +79,8 @@ class Wall(pygame.sprite.Sprite):
         super().__init__()
         self.width = DEFAULT_OBJECT_SIZE
         self.height = DEFAULT_OBJECT_SIZE
-        self.surf = pygame.Surface((self.width, self.height))
-        self.surf.fill((255, 255, 255))
+        self.surf = pygame.image.load("images/wall.png").convert_alpha()
+        self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.surf.get_rect(center=center_pos)
 
     @staticmethod
@@ -57,9 +99,31 @@ class Wall(pygame.sprite.Sprite):
         return centers
 
 
+class Bomb(pygame.sprite.Sprite):
+    def __init__(self, player_coord):
+        super(Bomb, self).__init__()
+        self.surf = pygame.image.load("images/bomb.png").convert_alpha()
+        self.surf.set_colorkey((255, 255, 255), RLEACCEL)
+        self.rect = self.surf.get_rect(center=(
+                self.get_coord(player_coord)
+            ))
+
+    def get_coord(self, player_coord):
+        width = player_coord[0] - player_coord[0] % DEFAULT_OBJECT_SIZE + self.surf.get_width() // 2
+        height = player_coord[1] - player_coord[1] % DEFAULT_OBJECT_SIZE + self.surf.get_height() // 2
+
+        return width, height
+
+    # def update(self):
+    #     self.rect.move_ip(-self.speed, 0)
+    #     if self.rect.right < 0:
+    #         self.kill()
+
+
 player = Player()
 
 walls = pygame.sprite.Group()
+bombs = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 all_sprites.add(player)
 
@@ -77,13 +141,19 @@ while running:
         if event.type == KEYDOWN:
             if event.key == K_ESCAPE:
                 running = False
+            elif event.key == K_SPACE:
+                new_bomb = player.put_bomb()
+                bombs.add(new_bomb)
+                all_sprites.add(new_bomb)
 
         elif event.type == QUIT:
             running = False
 
-    player.update()
+    pressed_keys_list = pygame.key.get_pressed()
 
+    player.update(pressed_keys_list)
     walls.update()
+    bombs.update()
 
     screen.fill((0, 0, 0))
 
