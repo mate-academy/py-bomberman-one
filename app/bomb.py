@@ -21,4 +21,3 @@ class Bomb(pygame.sprite.Sprite):
             lines[0] * DEFAULT_OBJECT_SIZE + self.rect.width // 2,
             lines[1] * DEFAULT_OBJECT_SIZE + self.rect.height // 2,
         )
-
