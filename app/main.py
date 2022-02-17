@@ -30,41 +30,44 @@ screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.surf = pygame.Surface((40, 40))
-        self.surf = pygame.image.load(
+        self.image_down = pygame.image.load(
+            os.path.join("images", "player_front.png")).convert_alpha()
+        self.image_back = pygame.image.load(
+            os.path.join("images", "player_back.png")).convert_alpha()
+        self.image_right = pygame.image.load(
             os.path.join("images", "player_right.png")).convert_alpha()
+        self.image_left = pygame.image.load(
+            os.path.join("images", "player_left.png")).convert_alpha()
+        self.surf = self.image_right
         self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.surf.get_rect()
+        self.bomb = []
         self.bomb_delay = 1000
         self.last_bomb = pygame.time.get_ticks()
 
-    def update(self, pressed_keys):
+    def update(self):
+        pressed_keys = pygame.key.get_pressed()
         if pressed_keys[K_UP]:
-            self.surf = pygame.image.load(
-                os.path.join("images", "player_back.png")).convert_alpha()
+            self.surf = self.image_back
             self.rect.move_ip(0, -5)
-            if pygame.sprite.spritecollideany(self, walls):
-                self.rect.move_ip(0, 5)
+            self.check_collision(0, 5)
         if pressed_keys[K_DOWN]:
-            self.surf = pygame.image.load(
-                os.path.join("images", "player_front.png")).convert_alpha()
+            self.surf = self.image_down
             self.rect.move_ip(0, 5)
-            if pygame.sprite.spritecollideany(self, walls):
-                self.rect.move_ip(0, -5)
+            self.check_collision(0, -5)
         if pressed_keys[K_LEFT]:
-            self.surf = pygame.image.load(
-                os.path.join("images", "player_left.png")).convert_alpha()
+            self.surf = self.image_left
             self.rect.move_ip(-5, 0)
-            if pygame.sprite.spritecollideany(self, walls):
-                self.rect.move_ip(5, 0)
+            self.check_collision(5, 0)
         if pressed_keys[K_RIGHT]:
-            self.surf = pygame.image.load(
-                os.path.join("images", "player_right.png")).convert_alpha()
+            self.surf = self.image_right
             self.rect.move_ip(5, 0)
-            if pygame.sprite.spritecollideany(self, walls):
-                self.rect.move_ip(-5, 0)
+            self.check_collision(-5, 0)
         if pressed_keys[K_SPACE]:
             self.plant_bomb()
+
+        if not pygame.sprite.spritecollideany(self, temp_bombs):
+            bombs.add(self.bomb)
 
         if self.rect.left < 0:
             self.rect.left = 0
@@ -79,17 +82,25 @@ class Player(pygame.sprite.Sprite):
         now = pygame.time.get_ticks()
         if now - self.last_bomb > self.bomb_delay:
             self.last_bomb = now
-            x = self.rect.centerx // 50 * 50 + 25
-            y = self.rect.centery // 50 * 50 + 25
-            bomb = Bomb((x, y))
-            all_sprites.add(bomb)
-            bombs.add(bomb)
+            x = (self.rect.centerx // DEFAULT_OBJECT_SIZE *
+                 DEFAULT_OBJECT_SIZE) + DEFAULT_OBJECT_SIZE // 2
+            y = (self.rect.centery // DEFAULT_OBJECT_SIZE *
+                 DEFAULT_OBJECT_SIZE) + DEFAULT_OBJECT_SIZE // 2
+            self.bomb = Bomb((x, y))
+            all_sprites.add(self.bomb)
+            temp_bombs.add(self.bomb)
+
+    def check_collision(self, x_speed: int, y_speed: int):
+        if (pygame.sprite.spritecollideany(self, walls)
+                or pygame.sprite.spritecollideany(self, bombs)):
+            self.rect.move_ip(x_speed, y_speed)
 
 
 player = Player()
 
 walls = pygame.sprite.Group()
 bombs = pygame.sprite.Group()
+temp_bombs = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 all_sprites.add(player)
 
@@ -111,7 +122,7 @@ while running:
         elif event.type == QUIT:
             running = False
 
-    player.update(pygame.key.get_pressed())
+    player.update()
 
     walls.update()
 
