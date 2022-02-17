@@ -6,6 +6,7 @@ from pygame.locals import (
     K_LEFT,
     K_RIGHT,
     K_ESCAPE,
+    K_SPACE,
     KEYDOWN,
     QUIT,
 )
@@ -19,17 +20,73 @@ SCREEN_HEIGHT = 650
 DEFAULT_OBJECT_SIZE = 50
 
 screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
+pygame.display.get_driver()
 
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
-        self.surf = pygame.Surface((20, 40))
-        self.surf.fill((0, 255, 0))
+        self.surf = pygame.image.load("images/player_front.png").convert()
         self.rect = self.surf.get_rect()
+        self.counter = 0
 
     def update(self):
-        pass
+        self.counter += 1
+        key_press = pygame.key.get_pressed()
+        if key_press[K_LEFT]:
+            self.surf = pygame.image.load("images/player_left.png").convert()
+            self.rect.move_ip(-2, 0)
+            if pygame.sprite.spritecollideany(self, group=walls):
+                self.rect.move_ip(2, 0)
+        elif key_press[K_RIGHT]:
+            self.surf = \
+                pygame.image.load("images/player_right.png").convert()
+            self.rect.move_ip(2, 0)
+            if pygame.sprite.spritecollideany(self, group=walls):
+                self.rect.move_ip(-2, 0)
+        elif key_press[K_UP]:
+            self.surf = \
+                pygame.image.load("images/player_back.png").convert()
+            self.rect.move_ip(0, -2)
+            if pygame.sprite.spritecollideany(self, group=walls):
+                self.rect.move_ip(0, 2)
+        elif key_press[K_DOWN]:
+            self.surf = \
+                pygame.image.load("images/player_front.png").convert()
+            self.rect.move_ip(0, 2)
+            if pygame.sprite.spritecollideany(self, group=walls):
+                self.rect.move_ip(0, -2)
+        elif key_press[K_SPACE]:
+            if self.counter >= 60:
+                bomb = Bomb((self.rect.x, self.rect.y))
+                all_sprites.add(bomb)
+                bombs.add(bomb)
+                self.counter = 0
+
+        if self.rect.left < 0:
+            self.rect.left = 0
+        elif self.rect.right > SCREEN_WIDTH:
+            self.rect.right = SCREEN_WIDTH
+        elif self.rect.top <= 0:
+            self.rect.top = 0
+        elif self.rect.bottom >= SCREEN_HEIGHT:
+            self.rect.bottom = SCREEN_HEIGHT
+
+
+class Bomb(pygame.sprite.Sprite):
+    def __init__(self, center: tuple):
+        super().__init__()
+        self.width = DEFAULT_OBJECT_SIZE
+        self.height = DEFAULT_OBJECT_SIZE
+        self.surf = pygame.image.load("images/bomb.png").convert_alpha()
+        self.rect = self.surf.get_rect(center=self.get_centr(center))
+
+    def get_centr(self, center):
+        wight = (center[0] - center[0] % DEFAULT_OBJECT_SIZE
+                 + self.surf.get_width() // 2)
+        height = (center[1] - center[1] % DEFAULT_OBJECT_SIZE
+                  + self.surf.get_height() // 2)
+        return wight, height
 
 
 class Wall(pygame.sprite.Sprite):
@@ -37,8 +94,7 @@ class Wall(pygame.sprite.Sprite):
         super().__init__()
         self.width = DEFAULT_OBJECT_SIZE
         self.height = DEFAULT_OBJECT_SIZE
-        self.surf = pygame.Surface((self.width, self.height))
-        self.surf.fill((255, 255, 255))
+        self.surf = pygame.image.load("images/wall.png").convert()
         self.rect = self.surf.get_rect(center=center_pos)
 
     @staticmethod
@@ -59,6 +115,7 @@ class Wall(pygame.sprite.Sprite):
 
 player = Player()
 
+bombs = pygame.sprite.Group()
 walls = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 all_sprites.add(player)
