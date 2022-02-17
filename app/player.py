@@ -17,7 +17,6 @@ class Player(pygame.sprite.Sprite):
 
         image = "images/player_front.png"
         self.image = pygame.image.load(image).convert_alpha()
-        # self.surf.fill((0, 255, 0))
         self.rect = self.image.get_rect()
 
     def update(self, pressed_keys):

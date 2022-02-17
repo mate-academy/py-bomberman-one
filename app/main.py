@@ -35,6 +35,7 @@ class Bomberman:
         self.player = Player(self)
         self.walls = pygame.sprite.Group()
         self.bombs = pygame.sprite.Group()
+        self.current_bomb = None
 
         self.all_sprites = pygame.sprite.Group()
         self.all_sprites.add(self.player)
@@ -64,20 +65,17 @@ class Bomberman:
 
             pressed_keys = pygame.key.get_pressed()
 
+            if pressed_keys[K_SPACE] and self.timer <= 0:
+                new_x = self.player.rect.center[0] // 50
+                new_y = self.player.rect.center[1] // 50
+                self.current_bomb = Bomb((new_x * 50 + 25, new_y * 50 + 25))
+                self.all_sprites.add(self.current_bomb)
+                self.timer = 60
+
             self.player.update(pressed_keys)
             self._check_player_collision(self.walls, pressed_keys)
             self._check_player_collision(self.bombs, pressed_keys)
-
-            if pressed_keys[K_SPACE] and self.timer <= 0:
-                print(self.player.rect.center)
-                new_x = self.player.rect.center[0] // 50
-                new_y = self.player.rect.center[1] // 50
-                print(new_x, new_y)
-                print(new_x * 50, new_y * 50)
-                bomb = Bomb((new_x * 50 + 25, new_y * 50 + 25))
-                self.bombs.add(bomb)
-                self.all_sprites.add(bomb)
-                self.timer = 60
+            self._check_is_on_bomb()
 
             # walls.update()
 
@@ -103,6 +101,12 @@ class Bomberman:
                 self.player.rect.left = collision.rect.right
             if pressed_keys[K_RIGHT]:
                 self.player.rect.right = collision.rect.left
+
+    def _check_is_on_bomb(self):
+        if self.current_bomb:
+            if not pygame.sprite.collide_rect(self.player, self.current_bomb):
+                self.bombs.add(self.current_bomb)
+                self.current_bomb = None
 
 
 if __name__ == '__main__':
