@@ -49,6 +49,8 @@ class Player(pygame.sprite.Sprite):
             self.rect.move_ip(5, 0)
             if pygame.sprite.spritecollideany(self, walls):
                 self.rect.move_ip(-5, 0)
+        if self.plant_bomb_waiting:
+            self.plant_bomb_waiting -= 1
         if pressed_keys[K_SPACE]:
             self.put_bomb()
             self.is_on_bomb = True
@@ -65,13 +67,10 @@ class Player(pygame.sprite.Sprite):
             self.rect.bottom = SCREEN_HEIGHT
 
     def put_bomb(self):
-        if self.plant_bomb_waiting:
-            self.plant_bomb_waiting -= 1
-        else:
-            new_bomb = Bomb(self.rect.center)
-            self.plant_bomb_waiting = 60
-
-            return new_bomb
+        bomb = Bomb(self.rect.center)
+        bombs.add(bomb)
+        all_sprites.add(bomb)
+        self.plant_bomb_waiting = 60
 
 
 class Wall(pygame.sprite.Sprite):
@@ -114,11 +113,6 @@ class Bomb(pygame.sprite.Sprite):
 
         return width, height
 
-    # def update(self):
-    #     self.rect.move_ip(-self.speed, 0)
-    #     if self.rect.right < 0:
-    #         self.kill()
-
 
 player = Player()
 
@@ -141,11 +135,6 @@ while running:
         if event.type == KEYDOWN:
             if event.key == K_ESCAPE:
                 running = False
-            elif event.key == K_SPACE:
-                new_bomb = player.put_bomb()
-                bombs.add(new_bomb)
-                all_sprites.add(new_bomb)
-
         elif event.type == QUIT:
             running = False
 
