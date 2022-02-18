@@ -25,17 +25,17 @@ class Player(pygame.sprite.Sprite):
                 image = "images/player_back.png"
                 self.image = pygame.image.load(image).convert_alpha()
                 self.rect.move_ip(0, -5)
-                
+
             if pressed_keys[K_DOWN]:
                 image = "images/player_front.png"
                 self.image = pygame.image.load(image).convert_alpha()
                 self.rect.move_ip(0, 5)
-                
+
             if pressed_keys[K_LEFT]:
                 image = "images/player_left.png"
                 self.image = pygame.image.load(image).convert_alpha()
                 self.rect.move_ip(-5, 0)
-                
+
             if pressed_keys[K_RIGHT]:
                 image = "images/player_right.png"
                 self.image = pygame.image.load(image).convert_alpha()
