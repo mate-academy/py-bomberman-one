@@ -30,33 +30,39 @@ class Player(pygame.sprite.Sprite):
         self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.surf.get_rect()
         self.plant_bomb_waiting = 0
+        self.dropped_bombs = []
 
     def update(self, pressed_keys):
         if pressed_keys[K_UP]:
             self.rect.move_ip(0, -5)
-            if pygame.sprite.spritecollideany(self, walls):
+            if pygame.sprite.spritecollideany(self, walls) or \
+                    pygame.sprite.spritecollideany(self, bombs):
                 self.rect.move_ip(0, 5)
         if pressed_keys[K_DOWN]:
             self.rect.move_ip(0, 5)
-            if pygame.sprite.spritecollideany(self, walls):
+            if pygame.sprite.spritecollideany(self, walls) or \
+                    pygame.sprite.spritecollideany(self, bombs):
                 self.rect.move_ip(0, -5)
         if pressed_keys[K_LEFT]:
             self.rect.move_ip(-5, 0)
-            if pygame.sprite.spritecollideany(self, walls):
+            if pygame.sprite.spritecollideany(self, walls) or \
+                    pygame.sprite.spritecollideany(self, bombs):
                 self.rect.move_ip(5, 0)
         if pressed_keys[K_RIGHT]:
             self.rect.move_ip(5, 0)
-            if pygame.sprite.spritecollideany(self, walls):
+            if pygame.sprite.spritecollideany(self, walls) or \
+                    pygame.sprite.spritecollideany(self, bombs):
                 self.rect.move_ip(-5, 0)
         if self.plant_bomb_waiting:
             self.plant_bomb_waiting -= 1
         if pressed_keys[K_SPACE]:
             if not self.plant_bomb_waiting:
                 bomb = self.put_bomb()
-                bombs.add(bomb)
+                self.dropped_bombs.append(bomb)
                 all_sprites.add(bomb)
-            if not pygame.sprite.spritecollideany(self, bombs):
-                walls.add(bomb)
+        if not pygame.sprite.spritecollideany(self, bombs):
+            if self.dropped_bombs:
+                bombs.add(self.dropped_bombs[-1])
 
         if self.rect.left < 0:
             self.rect.left = 0
