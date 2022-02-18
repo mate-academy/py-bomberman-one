@@ -60,8 +60,8 @@ class Player(pygame.sprite.Sprite):
                 bomb = self.put_bomb()
                 self.dropped_bombs.append(bomb)
                 all_sprites.add(bomb)
-        if not pygame.sprite.spritecollideany(self, bombs):
-            if self.dropped_bombs:
+        if self.dropped_bombs:
+            if not pygame.sprite.collide_rect(self, self.dropped_bombs[-1]):
                 bombs.add(self.dropped_bombs[-1])
 
         if self.rect.left < 0:
