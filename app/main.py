@@ -30,7 +30,6 @@ class Player(pygame.sprite.Sprite):
         self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.surf.get_rect()
         self.plant_bomb_waiting = 0
-        self.is_on_bomb = False
 
     def update(self, pressed_keys):
         if pressed_keys[K_UP]:
@@ -52,10 +51,12 @@ class Player(pygame.sprite.Sprite):
         if self.plant_bomb_waiting:
             self.plant_bomb_waiting -= 1
         if pressed_keys[K_SPACE]:
-            self.put_bomb()
-            self.is_on_bomb = True
-        if not pygame.sprite.spritecollideany(self, bombs):
-            self.is_on_bomb = False
+            if not self.plant_bomb_waiting:
+                bomb = self.put_bomb()
+                bombs.add(bomb)
+                all_sprites.add(bomb)
+            if not pygame.sprite.spritecollideany(self, bombs):
+                walls.add(bomb)
 
         if self.rect.left < 0:
             self.rect.left = 0
@@ -68,9 +69,9 @@ class Player(pygame.sprite.Sprite):
 
     def put_bomb(self):
         bomb = Bomb(self.rect.center)
-        bombs.add(bomb)
-        all_sprites.add(bomb)
         self.plant_bomb_waiting = 60
+
+        return bomb
 
 
 class Wall(pygame.sprite.Sprite):
