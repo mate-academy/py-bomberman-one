@@ -35,34 +35,39 @@ screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
-        self.surf = pygame.image.load("images/player_front.png").convert_alpha()
+        self.surf = pygame.image.load\
+            ("images/player_front.png").convert_alpha()
         self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.surf.get_rect()
         self.plant_bomb_waiting = 0
         self.dropped_bombs = []
-        self.health = 100000
+        self.health = 100
 
     def update(self, pressed_keys):
         if pressed_keys[K_UP]:
-            self.surf = pygame.image.load("images/player_back.png").convert_alpha()
+            self.surf = pygame.image.load\
+                ("images/player_back.png").convert_alpha()
             self.rect.move_ip(0, -5)
             if pygame.sprite.spritecollideany(self, walls) or \
                     pygame.sprite.spritecollideany(self, bombs):
                 self.rect.move_ip(0, 5)
         if pressed_keys[K_DOWN]:
-            self.surf = pygame.image.load("images/player_front.png").convert_alpha()
+            self.surf = pygame.image.load\
+                ("images/player_front.png").convert_alpha()
             self.rect.move_ip(0, 5)
             if pygame.sprite.spritecollideany(self, walls) or \
                     pygame.sprite.spritecollideany(self, bombs):
                 self.rect.move_ip(0, -5)
         if pressed_keys[K_LEFT]:
-            self.surf = pygame.image.load("images/player_left.png").convert_alpha()
+            self.surf = pygame.image.load\
+                ("images/player_left.png").convert_alpha()
             self.rect.move_ip(-5, 0)
             if pygame.sprite.spritecollideany(self, walls) or \
                     pygame.sprite.spritecollideany(self, bombs):
                 self.rect.move_ip(5, 0)
         if pressed_keys[K_RIGHT]:
-            self.surf = pygame.image.load("images/player_right.png").convert_alpha()
+            self.surf = pygame.image.load\
+                ("images/player_right.png").convert_alpha()
             self.rect.move_ip(5, 0)
             if pygame.sprite.spritecollideany(self, walls) or \
                     pygame.sprite.spritecollideany(self, bombs):
@@ -75,7 +80,8 @@ class Player(pygame.sprite.Sprite):
                 self.dropped_bombs.append(bomb)
                 all_sprites.add(bomb)
         if self.dropped_bombs:
-            if not pygame.sprite.collide_rect(self, self.dropped_bombs[-1]):
+            if not pygame.sprite.collide_rect\
+                        (self, self.dropped_bombs[-1]):
                 bombs.add(self.dropped_bombs[-1])
                 del self.dropped_bombs[-1]
 
@@ -101,7 +107,8 @@ class Wall(pygame.sprite.Sprite):
         super().__init__()
         self.width = DEFAULT_OBJECT_SIZE
         self.height = DEFAULT_OBJECT_SIZE
-        self.surf = pygame.image.load("images/wall.png").convert_alpha()
+        self.surf = pygame.image.load\
+            ("images/wall.png").convert_alpha()
         self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.surf.get_rect(center=center_pos)
 
@@ -124,7 +131,8 @@ class Wall(pygame.sprite.Sprite):
 class Bomb(pygame.sprite.Sprite):
     def __init__(self, player_coord):
         super(Bomb, self).__init__()
-        self.surf = pygame.image.load("images/bomb.png").convert_alpha()
+        self.surf = pygame.image.load\
+            ("images/bomb.png").convert_alpha()
         self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.surf.get_rect(center=(
                 self.get_coord(player_coord)
@@ -132,8 +140,10 @@ class Bomb(pygame.sprite.Sprite):
         self.time_to_blow = 180
 
     def get_coord(self, player_coord):
-        width = player_coord[0] - player_coord[0] % DEFAULT_OBJECT_SIZE + self.surf.get_width() // 2
-        height = player_coord[1] - player_coord[1] % DEFAULT_OBJECT_SIZE + self.surf.get_height() // 2
+        width = player_coord[0] - player_coord[0] % \
+                DEFAULT_OBJECT_SIZE + self.surf.get_width() // 2
+        height = player_coord[1] - player_coord[1] % \
+                 DEFAULT_OBJECT_SIZE + self.surf.get_height() // 2
 
         return width, height
 
@@ -146,16 +156,20 @@ class Bomb(pygame.sprite.Sprite):
             fires.add(fire_center)
             all_sprites.add(fire_center)
             for step in range(1, 6):
-                fire_top = Fire((current_coord[0], current_coord[1] + DEFAULT_OBJECT_SIZE * step))
+                fire_top = Fire((current_coord[0], current_coord[1] +
+                                 DEFAULT_OBJECT_SIZE * step))
                 fires.add(fire_top)
                 all_sprites.add(fire_top)
-                fire_bottom = Fire((current_coord[0], current_coord[1] - DEFAULT_OBJECT_SIZE * step))
+                fire_bottom = Fire((current_coord[0], current_coord[1] -
+                                    DEFAULT_OBJECT_SIZE * step))
                 fires.add(fire_bottom)
                 all_sprites.add(fire_bottom)
-                fire_left = Fire((current_coord[0] - DEFAULT_OBJECT_SIZE * step, current_coord[1]))
+                fire_left = Fire((current_coord[0] - DEFAULT_OBJECT_SIZE *
+                                  step, current_coord[1]))
                 fires.add(fire_left)
                 all_sprites.add(fire_left)
-                fire_right = Fire((current_coord[0] + DEFAULT_OBJECT_SIZE * step, current_coord[1]))
+                fire_right = Fire((current_coord[0] + DEFAULT_OBJECT_SIZE *
+                                   step, current_coord[1]))
                 fires.add(fire_right)
                 all_sprites.add(fire_right)
 
@@ -163,7 +177,8 @@ class Bomb(pygame.sprite.Sprite):
 class Fire(pygame.sprite.Sprite):
     def __init__(self, bomb_coord):
         super(Fire, self).__init__()
-        self.surf = pygame.image.load("images/explosion_1.png").convert_alpha()
+        self.surf = pygame.image.load\
+            ("images/explosion_1.png").convert_alpha()
         self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.surf.get_rect(center=bomb_coord)
         self.time_to_blow = 30
@@ -171,9 +186,11 @@ class Fire(pygame.sprite.Sprite):
     def update(self):
         self.time_to_blow -= 1
         if self.time_to_blow == 20:
-            self.surf = pygame.image.load("images/explosion_2.png").convert_alpha()
+            self.surf = pygame.image.load\
+                ("images/explosion_2.png").convert_alpha()
         elif self.time_to_blow == 10:
-            self.surf = pygame.image.load("images/explosion_3.png").convert_alpha()
+            self.surf = pygame.image.load\
+                ("images/explosion_3.png").convert_alpha()
         elif not self.time_to_blow:
             self.kill()
 
@@ -181,34 +198,39 @@ class Fire(pygame.sprite.Sprite):
 class Spider(pygame.sprite.Sprite):
     def __init__(self):
         super(Spider, self).__init__()
-        self.surf = pygame.image.load("images/spider_front.png").convert_alpha()
+        self.surf = pygame.image.load\
+            ("images/spider_front.png").convert_alpha()
         self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.surf.get_rect()
 
     def update(self):
         if self.rect.center[1] > (player.rect.center[1]):
-            self.surf = pygame.image.load("images/spider_back.png").convert_alpha()
+            self.surf = pygame.image.load\
+                ("images/spider_back.png").convert_alpha()
             self.rect.move_ip(0, -2)
             if pygame.sprite.spritecollideany(self, walls) or \
                     pygame.sprite.spritecollideany(self, bombs) or \
                     pygame.sprite.spritecollideany(self, rocks):
                 self.rect.move_ip(0, 2)
         if self.rect.center[1] < (player.rect.center[1]):
-            self.surf = pygame.image.load("images/spider_front.png").convert_alpha()
+            self.surf = pygame.image.load\
+                ("images/spider_front.png").convert_alpha()
             self.rect.move_ip(0, 2)
             if pygame.sprite.spritecollideany(self, walls) or \
                     pygame.sprite.spritecollideany(self, bombs) or \
                     pygame.sprite.spritecollideany(self, rocks):
                 self.rect.move_ip(0, -2)
         if self.rect.center[0] > (player.rect.center[0]):
-            self.surf = pygame.image.load("images/spider_left.png").convert_alpha()
+            self.surf = pygame.image.load\
+                ("images/spider_left.png").convert_alpha()
             self.rect.move_ip(-2, 0)
             if pygame.sprite.spritecollideany(self, walls) or \
                     pygame.sprite.spritecollideany(self, bombs) or \
                     pygame.sprite.spritecollideany(self, rocks):
                 self.rect.move_ip(2, 0)
         if self.rect.center[0] < (player.rect.center[0]):
-            self.surf = pygame.image.load("images/spider_right.png").convert_alpha()
+            self.surf = pygame.image.load\
+                ("images/spider_right.png").convert_alpha()
             self.rect.move_ip(2, 0)
             if pygame.sprite.spritecollideany(self, walls) or \
                     pygame.sprite.spritecollideany(self, bombs) or \
@@ -234,7 +256,8 @@ class Spider(pygame.sprite.Sprite):
 class Boar(pygame.sprite.Sprite):
     def __init__(self):
         super(Boar, self).__init__()
-        self.surf = pygame.image.load("images/boar_front.png").convert_alpha()
+        self.surf = pygame.image.load\
+            ("images/boar_front.png").convert_alpha()
         self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.surf.get_rect(center=(SCREEN_WIDTH, 0))
         self.dropped_rocks = []
@@ -242,28 +265,32 @@ class Boar(pygame.sprite.Sprite):
 
     def update(self):
         if self.rect.center[1] > (player.rect.center[1]):
-            self.surf = pygame.image.load("images/boar_back.png").convert_alpha()
+            self.surf = pygame.image.load\
+                ("images/boar_back.png").convert_alpha()
             self.rect.move_ip(0, -2)
             if pygame.sprite.spritecollideany(self, walls) or \
                     pygame.sprite.spritecollideany(self, bombs) or \
                     pygame.sprite.spritecollideany(self, rocks):
                 self.rect.move_ip(0, 2)
         if self.rect.center[1] < (player.rect.center[1]):
-            self.surf = pygame.image.load("images/boar_front.png").convert_alpha()
+            self.surf = pygame.image.load\
+                ("images/boar_front.png").convert_alpha()
             self.rect.move_ip(0, 2)
             if pygame.sprite.spritecollideany(self, walls) or \
                     pygame.sprite.spritecollideany(self, bombs) or \
                     pygame.sprite.spritecollideany(self, rocks):
                 self.rect.move_ip(0, -2)
         if self.rect.center[0] > (player.rect.center[0]):
-            self.surf = pygame.image.load("images/boar_left.png").convert_alpha()
+            self.surf = pygame.image.load\
+                ("images/boar_left.png").convert_alpha()
             self.rect.move_ip(-2, 0)
             if pygame.sprite.spritecollideany(self, walls) or \
                     pygame.sprite.spritecollideany(self, bombs) or \
                     pygame.sprite.spritecollideany(self, rocks):
                 self.rect.move_ip(2, 0)
         if self.rect.center[0] < (player.rect.center[0]):
-            self.surf = pygame.image.load("images/boar_right.png").convert_alpha()
+            self.surf = pygame.image.load\
+                ("images/boar_right.png").convert_alpha()
             self.rect.move_ip(2, 0)
             if pygame.sprite.spritecollideany(self, walls) or \
                     pygame.sprite.spritecollideany(self, bombs) or \
@@ -291,7 +318,8 @@ class Boar(pygame.sprite.Sprite):
             self.dropped_rocks.append(rock)
             all_sprites.add(rock)
         if self.dropped_rocks:
-            if not pygame.sprite.collide_rect(self, self.dropped_rocks[-1]):
+            if not pygame.sprite.collide_rect\
+                        (self, self.dropped_rocks[-1]):
                 rocks.add(self.dropped_rocks[-1])
                 del self.dropped_rocks[-1]
 
@@ -302,7 +330,8 @@ class Boar(pygame.sprite.Sprite):
 class Rock(pygame.sprite.Sprite):
     def __init__(self, boar_coord):
         super(Rock, self).__init__()
-        self.surf = pygame.image.load("images/rock.png").convert_alpha()
+        self.surf = pygame.image.load\
+            ("images/rock.png").convert_alpha()
         self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.surf.get_rect(center=boar_coord)
 
@@ -314,7 +343,8 @@ class Rock(pygame.sprite.Sprite):
 class Bird(pygame.sprite.Sprite):
     def __init__(self):
         super(Bird, self).__init__()
-        self.surf = pygame.image.load("images/bird_left.png").convert_alpha()
+        self.surf = pygame.image.load\
+            ("images/bird_left.png").convert_alpha()
         self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.surf.get_rect(
             center=(
@@ -342,7 +372,8 @@ class Bird(pygame.sprite.Sprite):
                 self.dropped_bombs.append(bomb)
                 all_sprites.add(bomb)
         if self.dropped_bombs:
-            if not pygame.sprite.collide_rect(self, self.dropped_bombs[-1]):
+            if not pygame.sprite.collide_rect\
+                        (self, self.dropped_bombs[-1]):
                 bombs.add(self.dropped_bombs[-1])
                 del self.dropped_bombs[-1]
         if self.rect.right < 0:
@@ -372,7 +403,8 @@ all_sprites = pygame.sprite.Group()
 all_sprites.add(player)
 
 for wall_center in Wall.create_centers_of_walls(
-    (SCREEN_WIDTH, SCREEN_HEIGHT), (DEFAULT_OBJECT_SIZE, DEFAULT_OBJECT_SIZE)
+    (SCREEN_WIDTH, SCREEN_HEIGHT),
+    (DEFAULT_OBJECT_SIZE, DEFAULT_OBJECT_SIZE)
 ):
     wall = Wall(wall_center)
     walls.add(wall)
